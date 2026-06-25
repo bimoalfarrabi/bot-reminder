@@ -106,8 +106,7 @@ class TelegramController extends Controller
                 "hari ini, 3:30PM\n" .
                 "3 hari lagi, 09:00\n" .
                 "setiap Senin, 9AM\n" .
-                "setiap tanggal 1, 08:00",
-                'HTML'
+                "setiap tanggal 1, 08:00"
             );
             return;
         }
