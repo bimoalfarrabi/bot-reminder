@@ -65,12 +65,6 @@ class TelegramController extends Controller
         $chatId = (int) ($message['chat']['id'] ?? 0);
         if (!$chatId) return;
 
-        // Whitelist: hanya izinkan chat ID yang terdaftar di settings
-        $allowedChatId = (int) \App\Models\Setting::get('telegram_chat_id');
-        if ($allowedChatId && $chatId !== $allowedChatId) {
-            return; // Abaikan pesan dari chat lain
-        }
-
         // Whitelist user ID: tolak jika user ID tidak diizinkan
         $allowedUserIds = \App\Models\Setting::get('telegram_allowed_user_ids') ?? '';
         if ($allowedUserIds !== '') {
