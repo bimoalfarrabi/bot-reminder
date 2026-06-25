@@ -118,10 +118,24 @@ class TelegramController extends Controller
             $lines = $reminders->map(function (Reminder $r): string {
                 $time = $r->scheduled_at->setTimezone('Asia/Jakarta')->format('d M Y, H:i') . ' WIB';
                 $type = $r->content_type === 'text' ? ($r->content ?? '-') : "[{$r->content_type}]";
-                return "• {$time} — " . mb_strimwidth($type, 0, 50, '...');
+                $recurring = $r->is_recurring ? ' 🔁' : '';
+                return "#{$r->id} {$time}{$recurring}\n  " . mb_strimwidth($type, 0, 50, '...');
             });
 
-            $this->telegram->sendMessage($chatId, "📋 Reminder upcoming:\n\n" . $lines->implode("\n"));
+            $this->telegram->sendMessage($chatId, "📋 Reminder upcoming:\n\n" . $lines->implode("\n\n") . "\n\nGunakan /stop {id} untuk menghentikan.");
+            return;
+        }
+
+        if ($text && preg_match('/^\/stop\s+(\d+)$/i', $text, $m)) {
+            $reminder = Reminder::where('id', (int)$m[1])->where('chat_id', $chatId)->first();
+
+            if (!$reminder) {
+                $this->telegram->sendMessage($chatId, "Reminder #{$m[1]} tidak ditemukan.");
+                return;
+            }
+
+            $reminder->update(['is_active' => false]);
+            $this->telegram->sendMessage($chatId, "✅ Reminder #{$reminder->id} dihentikan.");
             return;
         }
 
