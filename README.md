@@ -23,16 +23,18 @@
 **ID:**
 - Kirim pesan (teks/foto/file) ke bot → bot tanya kapan diingatkan
 - Reminder sekali & recurring (contoh: setiap Senin, 9AM)
-- Dashboard web: lihat, edit, hapus, toggle reminder
+- Stop reminder via `/stop <id>` di Telegram atau tombol Stop di dashboard
+- Dashboard web: lihat semua reminder, status, stop
 - Edit profil (email & password)
-- Pengaturan Bot Token & Chat ID langsung dari dashboard
+- Pengaturan Bot Token & Chat ID langsung dari dashboard (disimpan di DB)
 
 **EN:**
 - Send any message (text/photo/file) to bot → bot asks when to remind
 - One-time & recurring reminders (e.g. every Monday, 9AM)
-- Web dashboard: view, edit, delete, toggle reminders
+- Stop reminders via `/stop <id>` in Telegram or Stop button in dashboard
+- Web dashboard: view all reminders, status, stop
 - Profile editor (email & password)
-- Set Bot Token & Chat ID directly from the dashboard
+- Set Bot Token & Chat ID from the dashboard (stored in DB, not `.env`)
 
 ---
 
@@ -61,9 +63,8 @@ npm install
 cp .env.example .env
 /opt/lampp/bin/php artisan key:generate
 
-# 4. Edit .env
-# Isi DB_DATABASE, DB_USERNAME, DB_PASSWORD
-# Isi TELEGRAM_BOT_TOKEN dan TELEGRAM_CHAT_ID
+# 4. Edit .env — isi DB_DATABASE, DB_USERNAME, DB_PASSWORD
+#    (Bot Token & Chat ID diisi via dashboard setelah login, bukan di .env)
 
 # 5. Jalankan migrasi dan seed
 /opt/lampp/bin/php artisan migrate --seed
@@ -71,8 +72,9 @@ cp .env.example .env
 # 6. Jalankan aplikasi
 /opt/lampp/bin/php artisan serve        # Terminal 1 — Laravel
 npm run dev                              # Terminal 2 — Vite
-/opt/lampp/bin/php artisan queue:work   # Terminal 3 — Queue
-/opt/lampp/bin/php artisan bot:poll     # Terminal 4 — Bot polling
+/opt/lampp/bin/php artisan queue:work   # Terminal 3 — Queue worker
+/opt/lampp/bin/php artisan schedule:work # Terminal 4 — Scheduler (dispatch reminders)
+/opt/lampp/bin/php artisan bot:poll     # Terminal 5 — Bot polling (lokal)
 ```
 
 ### Login Default / Default Credentials
@@ -82,12 +84,43 @@ npm run dev                              # Terminal 2 — Vite
 | Email    | `admin@botreminder.local` |
 | Password | `password`                |
 
-> **ID:** Ganti password segera setelah login pertama via halaman Profil.
+> **ID:** Setelah login, buka **Settings** dan isi Bot Token & Chat ID. Ganti password via halaman Profil.
 >
-> **EN:** Change the password immediately after first login via the Profile page.
+> **EN:** After login, open **Settings** and fill in Bot Token & Chat ID. Change password via the Profile page.
+
+---
+
+## Deployment (Production)
+
+```bash
+# 1. Set environment
+APP_ENV=production
+APP_DEBUG=false
+
+# 2. Optimize
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+npm run build
+
+# 3. Queue worker — gunakan Supervisor atau systemd
+php artisan queue:work --daemon
+
+# 4. Scheduler — tambahkan ke crontab
+* * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
+
+# 5. Webhook (gantikan polling)
+# Set via Telegram API:
+# https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://yourdomain.com/webhook/telegram
+```
+
+> **ID:** Bot Token & Chat ID diisi via halaman Settings di dashboard (bukan via `.env`). Runtime selalu baca dari DB.
+>
+> **EN:** Bot Token & Chat ID are set via the Settings page in the dashboard (not via `.env`). Runtime always reads from DB.
 
 ---
 
 ## Lisensi / License
 
 [MIT](LICENSE)
+

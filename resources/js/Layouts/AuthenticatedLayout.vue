@@ -39,6 +39,18 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    :href="route('reminders.index')"
+                                    :active="route().current('reminders.*')"
+                                >
+                                    Reminders
+                                </NavLink>
+                                <NavLink
+                                    :href="route('settings.edit')"
+                                    :active="route().current('settings.*')"
+                                >
+                                    Settings
+                                </NavLink>
                             </div>
                         </div>
 
@@ -145,6 +157,18 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('dashboard')"
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('reminders.index')"
+                            :active="route().current('reminders.*')"
+                        >
+                            Reminders
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('settings.edit')"
+                            :active="route().current('settings.*')"
+                        >
+                            Settings
                         </ResponsiveNavLink>
                     </div>
 
