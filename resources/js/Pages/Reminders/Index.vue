@@ -25,68 +25,69 @@ function formatDate(dt) {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">Reminders</h2>
+            <h2 class="text-sm font-mono font-semibold uppercase tracking-wider text-[#8b949e]">~/reminders</h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-8">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <div class="p-6">
-                        <table class="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">#</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Konten</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Waktu (WIB)</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Tipe</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-500">Status</th>
-                                    <th class="px-4 py-3"></th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                <tr v-for="r in reminders.data" :key="r.id">
-                                    <td class="px-4 py-3 text-gray-400">{{ r.id }}</td>
-                                    <td class="px-4 py-3 max-w-xs truncate">
-                                        {{ r.content_type === 'text' ? (r.content ?? '-') : `[${r.content_type}]` }}
-                                    </td>
-                                    <td class="px-4 py-3 whitespace-nowrap">{{ formatDate(r.scheduled_at) }}</td>
-                                    <td class="px-4 py-3">
-                                        <span v-if="r.is_recurring" class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">🔁 Recurring</span>
-                                        <span v-else class="text-gray-400">Sekali</span>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <span v-if="!r.is_active" class="text-gray-400">Nonaktif</span>
-                                        <span v-else-if="r.triggered_at" class="text-green-600">Terkirim</span>
-                                        <span v-else class="text-yellow-600">Pending</span>
-                                    </td>
-                                    <td class="px-4 py-3">
-                                        <button
-                                            v-if="r.is_active && !r.triggered_at"
-                                            @click="stop(r.id)"
-                                            class="rounded bg-red-100 px-3 py-1 text-xs text-red-700 hover:bg-red-200"
-                                        >
-                                            Stop
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr v-if="reminders.data.length === 0">
-                                    <td colspan="6" class="px-4 py-8 text-center text-gray-400">Belum ada reminder.</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="border border-[#30363d] rounded-lg bg-[#161b22] overflow-hidden">
+                    <table class="min-w-full text-xs font-mono">
+                        <thead>
+                            <tr class="border-b border-[#30363d] bg-[#21262d]">
+                                <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider">id</th>
+                                <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider">content</th>
+                                <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider">scheduled_at</th>
+                                <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider">type</th>
+                                <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider">status</th>
+                                <th class="px-4 py-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#21262d]">
+                            <tr v-for="r in reminders.data" :key="r.id" class="hover:bg-[#21262d] transition-colors">
+                                <td class="px-4 py-3 text-[#8b949e]">{{ r.id }}</td>
+                                <td class="px-4 py-3 max-w-xs truncate text-[#e6edf3]">
+                                    {{ r.content_type === 'text' ? (r.content ?? '-') : `[${r.content_type}]` }}
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-[#e6edf3]">{{ formatDate(r.scheduled_at) }}</td>
+                                <td class="px-4 py-3 text-[#8b949e]">{{ r.content_type }}</td>
+                                <td class="px-4 py-3">
+                                    <span
+                                        class="inline-flex items-center gap-1 text-xs font-mono"
+                                        :class="r.status === 'pending' ? 'text-[#39d353]' : r.status === 'sent' ? 'text-[#8b949e]' : 'text-[#f85149]'"
+                                    >
+                                        <span class="text-[0.6rem]">{{ r.status === 'pending' ? '●' : '○' }}</span>
+                                        {{ r.status }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <button
+                                        v-if="r.status === 'pending'"
+                                        @click="stop(r.id)"
+                                        class="text-[#f85149] hover:text-[#e6edf3] text-xs font-mono uppercase tracking-wider transition-colors"
+                                    >
+                                        rm
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr v-if="!reminders.data.length">
+                                <td colspan="6" class="px-4 py-10 text-center text-[#8b949e]">no reminders found</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                        <!-- Pagination -->
-                        <div v-if="reminders.last_page > 1" class="mt-4 flex gap-2">
-                            <Link
-                                v-for="link in reminders.links"
-                                :key="link.label"
-                                :href="link.url ?? '#'"
-                                v-html="link.label"
-                                class="rounded border px-3 py-1 text-sm"
-                                :class="link.active ? 'bg-gray-800 text-white' : 'text-gray-600 hover:bg-gray-50'"
-                                :aria-disabled="!link.url"
-                            />
-                        </div>
+                    <!-- Pagination -->
+                    <div v-if="reminders.last_page > 1" class="flex gap-2 px-4 py-3 border-t border-[#30363d]">
+                        <Link
+                            v-for="link in reminders.links"
+                            :key="link.label"
+                            :href="link.url ?? '#'"
+                            v-html="link.label"
+                            class="rounded border px-3 py-1 text-xs font-mono"
+                            :class="link.active
+                                ? 'border-[#39d353] text-[#39d353]'
+                                : 'border-[#30363d] text-[#8b949e] hover:border-[#e6edf3] hover:text-[#e6edf3]'"
+                            :aria-disabled="!link.url"
+                        />
                     </div>
                 </div>
             </div>

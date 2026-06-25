@@ -8,12 +8,8 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
+    canResetPassword: { type: Boolean },
+    status: { type: String },
 });
 
 const form = useForm({
@@ -33,14 +29,13 @@ const submit = () => {
     <GuestLayout>
         <Head title="Log in" />
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+        <div v-if="status" class="mb-4 text-xs font-mono text-[#39d353]">
             {{ status }}
         </div>
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
-
+                <InputLabel for="email" value="email" />
                 <TextInput
                     id="email"
                     type="email"
@@ -50,13 +45,11 @@ const submit = () => {
                     autofocus
                     autocomplete="username"
                 />
-
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
+                <InputLabel for="password" value="password" />
                 <TextInput
                     id="password"
                     type="password"
@@ -65,34 +58,30 @@ const submit = () => {
                     required
                     autocomplete="current-password"
                 />
-
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4 block">
                 <label class="flex items-center">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600"
-                        >Remember me</span
-                    >
+                    <span class="ms-2 text-xs font-mono text-[#8b949e]">remember me</span>
                 </label>
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
+            <div class="mt-6 flex items-center justify-between">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    class="text-xs font-mono text-[#8b949e] underline hover:text-[#39d353] focus:outline-none"
                 >
-                    Forgot your password?
+                    forgot password?
                 </Link>
 
                 <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
+                    :class="{ 'opacity-40': form.processing }"
                     :disabled="form.processing"
                 >
-                    Log in
+                    login
                 </PrimaryButton>
             </div>
         </form>
