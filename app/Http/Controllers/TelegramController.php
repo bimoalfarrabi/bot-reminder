@@ -113,12 +113,24 @@ class TelegramController extends Controller
         }
 
         // No active state — handle commands and new messages
-        if ($text === '/start') {
+        if ($text === '/start' || $text === '/help') {
             $this->telegram->sendMessage($chatId,
-                "👋 Halo! Kirim pesan, foto, atau file ke saya, lalu saya tanya kapan kamu mau diingatkan.\n\n" .
-                "Contoh format waktu:\n" .
-                "• besok, 9AM\n• 3 hari lagi, 15:00\n• setiap Senin, 9AM\n\n" .
-                "Perintah:\n/list — lihat reminder\n/cancel — batalkan input"
+                "👋 *Bot Reminder* — Panduan Penggunaan\n\n" .
+                "Kirim pesan, foto, atau file ke saya → saya tanya kapan → isi format waktu → selesai\!\n\n" .
+                "📋 *Commands:*\n" .
+                "/help — tampilkan panduan ini\n" .
+                "/list — lihat reminder upcoming \(maks 10\)\n" .
+                "/stop \{id\} — hentikan reminder, contoh: `/stop 5`\n" .
+                "/cancel — batalkan input yang sedang berjalan\n\n" .
+                "⏰ *Format waktu:*\n" .
+                "`hari ini, 3PM`\n" .
+                "`besok, 09:30`\n" .
+                "`3 hari lagi, 12PM`\n" .
+                "`2 minggu lagi, 10AM`\n" .
+                "`1 bulan lagi, 08:00`\n" .
+                "`25 Juli, 7PM`\n" .
+                "`setiap Senin, 9AM` — recurring 🔁\n" .
+                "`setiap tanggal 1, 08:00` — recurring 🔁"
             );
             return;
         }
