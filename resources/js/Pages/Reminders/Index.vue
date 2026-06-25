@@ -12,7 +12,8 @@ function stop(id) {
 }
 
 function formatDate(dt) {
-    return new Date(dt).toLocaleString('id-ID', {
+    // ponytail: append Z so the bare MySQL datetime is parsed as UTC, not local time
+    return new Date(dt + 'Z').toLocaleString('id-ID', {
         timeZone: 'Asia/Jakarta',
         day: '2-digit', month: 'short', year: 'numeric',
         hour: '2-digit', minute: '2-digit',
