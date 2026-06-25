@@ -27,64 +27,64 @@ function submit() {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">Settings</h2>
+            <h2 class="text-sm font-mono font-semibold uppercase tracking-wider text-[#8b949e]">~/settings</h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-8">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="bg-white p-4 shadow sm:rounded-lg sm:p-8">
+                <div class="border border-[#30363d] rounded-lg bg-[#161b22] p-6 sm:p-8">
                     <div class="max-w-xl">
-                        <h3 class="mb-1 text-lg font-medium text-gray-900">Telegram Bot</h3>
-                        <p class="mb-6 text-sm text-gray-500">Token dan Chat ID dibaca dari database saat runtime.</p>
+                        <h3 class="mb-1 text-sm font-mono font-semibold text-[#e6edf3]">Telegram Bot</h3>
+                        <p class="mb-6 text-xs font-mono text-[#8b949e]">Token dan Chat ID dibaca dari database saat runtime.</p>
 
                         <div
                             v-if="status === 'settings-updated'"
-                            class="mb-4 rounded bg-green-50 px-4 py-2 text-sm text-green-700"
+                            class="mb-4 rounded border border-[#39d353] bg-[#0d1117] px-4 py-2 text-xs font-mono text-[#39d353]"
                         >
-                            Settings tersimpan.
+                            settings tersimpan.
                         </div>
 
                         <form @submit.prevent="submit" class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Bot Token</label>
+                                <label class="block text-xs font-mono font-medium uppercase tracking-wider text-[#8b949e]">Bot Token</label>
                                 <input
                                     v-model="form.bot_token"
                                     type="text"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-sm"
+                                    class="mt-1 w-full rounded border border-[#30363d] bg-[#0d1117] px-3 py-2 text-sm font-mono text-[#e6edf3] placeholder-[#8b949e] focus:border-[#39d353] focus:outline-none focus:ring-1 focus:ring-[#39d353]"
                                     placeholder="123456:ABC-DEF..."
                                     autocomplete="off"
                                 />
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Chat ID</label>
+                                <label class="block text-xs font-mono font-medium uppercase tracking-wider text-[#8b949e]">Chat ID</label>
                                 <input
                                     v-model="form.chat_id"
                                     type="text"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-sm"
+                                    class="mt-1 w-full rounded border border-[#30363d] bg-[#0d1117] px-3 py-2 text-sm font-mono text-[#e6edf3] placeholder-[#8b949e] focus:border-[#39d353] focus:outline-none focus:ring-1 focus:ring-[#39d353]"
                                     placeholder="-100123456789"
                                     autocomplete="off"
                                 />
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Allowed User IDs</label>
+                                <label class="block text-xs font-mono font-medium uppercase tracking-wider text-[#8b949e]">Allowed User IDs</label>
                                 <input
                                     v-model="form.allowed_user_ids"
                                     type="text"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-sm"
+                                    class="mt-1 w-full rounded border border-[#30363d] bg-[#0d1117] px-3 py-2 text-sm font-mono text-[#e6edf3] placeholder-[#8b949e] focus:border-[#39d353] focus:outline-none focus:ring-1 focus:ring-[#39d353]"
                                     placeholder="123456789,987654321"
                                     autocomplete="off"
                                 />
-                                <p class="mt-1 text-xs text-gray-400">User ID Telegram yang diizinkan, pisah koma. Kosongkan = tidak ada filter.</p>
+                                <p class="mt-1 text-xs font-mono text-[#8b949e]">User ID Telegram yang diizinkan, pisah koma. Kosongkan = tidak ada filter.</p>
                             </div>
 
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-4 pt-2">
                                 <button
                                     type="submit"
-                                    class="rounded bg-gray-800 px-4 py-2 text-sm text-white hover:bg-gray-700"
+                                    class="inline-flex items-center rounded border border-[#39d353] bg-transparent px-4 py-2 text-xs font-mono font-semibold uppercase tracking-widest text-[#39d353] transition-colors hover:bg-[#39d353] hover:text-[#0d1117]"
                                 >
-                                    Simpan
+                                    simpan
                                 </button>
                             </div>
                         </form>
