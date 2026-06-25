@@ -22,7 +22,6 @@ class TelegramController extends Controller
     {
         try {
             $update = $request->json()->all();
-            file_put_contents(storage_path('logs/last_update.json'), json_encode($update, JSON_PRETTY_PRINT));
 
             $message = $update['message'] ?? $update['edited_message'] ?? null;
 
@@ -32,10 +31,7 @@ class TelegramController extends Controller
 
             return response()->json(['ok' => true]);
         } catch (\Throwable $e) {
-            file_put_contents(storage_path('logs/webhook_error.txt'), 
-                date('Y-m-d H:i:s') . "\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n",
-                FILE_APPEND
-            );
+            logger()->error('Webhook error: ' . $e->getMessage());
             return response()->json(['ok' => false], 500);
         }
     }
