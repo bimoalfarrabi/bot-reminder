@@ -72,7 +72,7 @@ function getStatus(r) {
                                         @click="stop(r.id)"
                                         class="text-[#f85149] hover:text-[#e6edf3] text-xs font-mono uppercase tracking-wider transition-colors"
                                     >
-                                        rm
+                                        stop
                                     </button>
                                 </td>
                             </tr>
