@@ -67,6 +67,18 @@ function submit() {
                                 />
                             </div>
 
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Allowed User IDs</label>
+                                <input
+                                    v-model="form.allowed_user_ids"
+                                    type="text"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-sm"
+                                    placeholder="123456789,987654321"
+                                    autocomplete="off"
+                                />
+                                <p class="mt-1 text-xs text-gray-400">User ID Telegram yang diizinkan, pisah koma. Kosongkan = tidak ada filter.</p>
+                            </div>
+
                             <div class="flex items-center gap-4">
                                 <button
                                     type="submit"
