@@ -21,6 +21,10 @@ class TelegramController extends Controller
     public function webhook(Request $request): JsonResponse
     {
         $update = $request->json()->all();
+
+        // DEBUG: log raw update
+        logger()->info('webhook_update', $update);
+
         $message = $update['message'] ?? $update['edited_message'] ?? null;
 
         if ($message) {
