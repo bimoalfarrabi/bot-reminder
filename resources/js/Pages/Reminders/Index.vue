@@ -55,7 +55,7 @@ function formatDate(dt) {
                                         class="inline-flex items-center gap-1 text-xs font-mono"
                                         :class="r.status === 'pending' ? 'text-[#39d353]' : r.status === 'sent' ? 'text-[#8b949e]' : 'text-[#f85149]'"
                                     >
-                                        <span class="text-[0.6rem]">{{ r.status === 'pending' ? '●' : '○' }}</span>
+                                        <span style="font-size:0.6rem;line-height:1">{{ r.status === 'pending' ? '●' : '○' }}</span>
                                         {{ r.status }}
                                     </span>
                                 </td>
