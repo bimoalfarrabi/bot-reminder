@@ -18,6 +18,12 @@ function formatDate(dt) {
         hour: '2-digit', minute: '2-digit',
     }) + ' WIB'
 }
+
+function getStatus(r) {
+    if (r.triggered_at) return 'sent'
+    if (!r.is_active) return 'stopped'
+    return 'pending'
+}
 </script>
 
 <template>
@@ -54,15 +60,15 @@ function formatDate(dt) {
                                     <span
                                         class="inline-block px-2 py-0.5 rounded text-xs font-mono border whitespace-nowrap"
                                         :style="{
-                                            color: r.status === 'pending' ? '#39d353' : r.status === 'sent' ? '#8b949e' : '#f85149',
-                                            borderColor: r.status === 'pending' ? '#39d353' : r.status === 'sent' ? '#30363d' : '#f85149',
-                                            backgroundColor: r.status === 'pending' ? 'rgba(57,211,83,0.1)' : r.status === 'sent' ? 'transparent' : 'rgba(248,81,73,0.1)',
+                                            color: getStatus(r) === 'pending' ? '#39d353' : getStatus(r) === 'sent' ? '#8b949e' : '#f85149',
+                                            borderColor: getStatus(r) === 'pending' ? '#39d353' : getStatus(r) === 'sent' ? '#30363d' : '#f85149',
+                                            backgroundColor: getStatus(r) === 'pending' ? 'rgba(57,211,83,0.1)' : getStatus(r) === 'sent' ? 'transparent' : 'rgba(248,81,73,0.1)',
                                         }"
-                                    >{{ r.status }}</span>
+                                    >{{ getStatus(r) }}</span>
                                 </td>
                                 <td class="px-4 py-3">
                                     <button
-                                        v-if="r.status === 'pending'"
+                                        v-if="getStatus(r) === 'pending'"
                                         @click="stop(r.id)"
                                         class="text-[#f85149] hover:text-[#e6edf3] text-xs font-mono uppercase tracking-wider transition-colors"
                                     >
