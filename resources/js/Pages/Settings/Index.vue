@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { Head, router, usePage } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
@@ -15,7 +15,7 @@ const form = reactive({
     allowed_user_ids: props.allowedUserIds ?? '',
 })
 
-const status = usePage().props.status
+const status = computed(() => usePage().props.status)
 
 function submit() {
     router.put(route('settings.update'), form, { preserveScroll: true })
