@@ -52,12 +52,13 @@ function formatDate(dt) {
                                 <td class="px-4 py-3 text-[#8b949e]">{{ r.content_type }}</td>
                                 <td class="px-4 py-3">
                                     <span
-                                        class="inline-flex items-center gap-1 text-xs font-mono"
-                                        :class="r.status === 'pending' ? 'text-[#39d353]' : r.status === 'sent' ? 'text-[#8b949e]' : 'text-[#f85149]'"
-                                    >
-                                        <span style="font-size:0.6rem;line-height:1">{{ r.status === 'pending' ? '●' : '○' }}</span>
-                                        {{ r.status }}
-                                    </span>
+                                        class="inline-block px-2 py-0.5 rounded text-xs font-mono border"
+                                        :class="{
+                                            'text-[#39d353] border-[#39d353] bg-[#39d353]/10': r.status === 'pending',
+                                            'text-[#8b949e] border-[#30363d] bg-transparent': r.status === 'sent',
+                                            'text-[#f85149] border-[#f85149] bg-[#f85149]/10': r.status !== 'pending' && r.status !== 'sent',
+                                        }"
+                                    >{{ r.status }}</span>
                                 </td>
                                 <td class="px-4 py-3">
                                     <button
