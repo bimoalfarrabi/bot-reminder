@@ -15,20 +15,23 @@ class SettingController extends Controller
     public function edit(): Response
     {
         return Inertia::render('Settings/Index', [
-            'botToken' => Setting::get('telegram_bot_token') ?? '',
-            'chatId'   => Setting::get('telegram_chat_id') ?? '',
+            'botToken'       => Setting::get('telegram_bot_token') ?? '',
+            'chatId'         => Setting::get('telegram_chat_id') ?? '',
+            'allowedUserIds' => Setting::get('telegram_allowed_user_ids') ?? '',
         ]);
     }
 
     public function update(Request $request): RedirectResponse
     {
         $request->validate([
-            'bot_token' => ['required', 'string', 'max:255'],
-            'chat_id'   => ['required', 'string', 'max:255'],
+            'bot_token'        => ['required', 'string', 'max:255'],
+            'chat_id'          => ['required', 'string', 'max:255'],
+            'allowed_user_ids' => ['nullable', 'string', 'max:500'],
         ]);
 
         Setting::set('telegram_bot_token', $request->bot_token);
         Setting::set('telegram_chat_id', $request->chat_id);
+        Setting::set('telegram_allowed_user_ids', $request->allowed_user_ids ?? '');
 
         return back()->with('status', 'settings-updated');
     }

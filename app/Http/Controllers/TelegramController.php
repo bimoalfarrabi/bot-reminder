@@ -65,6 +65,16 @@ class TelegramController extends Controller
             return; // Abaikan pesan dari chat lain
         }
 
+        // Whitelist user ID: tolak jika user ID tidak diizinkan
+        $allowedUserIds = \App\Models\Setting::get('telegram_allowed_user_ids') ?? '';
+        if ($allowedUserIds !== '') {
+            $userId = (int) ($message['from']['id'] ?? 0);
+            $allowed = array_map('intval', array_filter(array_map('trim', explode(',', $allowedUserIds))));
+            if (!in_array($userId, $allowed, true)) {
+                return;
+            }
+        }
+
         $text = $message['text'] ?? null;
         $state = BotState::getOrCreate($chatId);
 

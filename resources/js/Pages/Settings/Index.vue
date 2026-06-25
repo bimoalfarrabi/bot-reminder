@@ -6,11 +6,13 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 const props = defineProps({
     botToken: String,
     chatId: String,
+    allowedUserIds: String,
 })
 
 const form = reactive({
-    bot_token: props.botToken ?? '',
-    chat_id: props.chatId ?? '',
+    bot_token:        props.botToken ?? '',
+    chat_id:          props.chatId ?? '',
+    allowed_user_ids: props.allowedUserIds ?? '',
 })
 
 const status = usePage().props.status
