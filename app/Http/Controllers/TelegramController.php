@@ -81,7 +81,9 @@ class TelegramController extends Controller
             }
         }
 
-        $text = $message['text'] ?? null;
+        // Strip @botname suffix from commands (e.g. /help@viasco_reminder_bot → /help)
+        $rawText = $message['text'] ?? null;
+        $text = $rawText ? preg_replace('/^(\/\w+)@\w+/', '$1', $rawText) : null;
         $state = BotState::getOrCreate($chatId);
 
         // State: awaiting interval input
