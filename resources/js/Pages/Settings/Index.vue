@@ -15,7 +15,7 @@ const form = reactive({
     allowed_user_ids: props.allowedUserIds ?? '',
 })
 
-const status = computed(() => usePage().props.status)
+const status = computed(() => usePage().props.flash?.status)
 
 function submit() {
     router.put(route('settings.update'), form, { preserveScroll: true })
