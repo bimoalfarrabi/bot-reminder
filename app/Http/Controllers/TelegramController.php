@@ -84,6 +84,34 @@ class TelegramController extends Controller
         // Strip @botname suffix from commands (e.g. /help@viasco_reminder_bot → /help)
         $rawText = $message['text'] ?? null;
         $text = $rawText ? preg_replace('/^(\/\w+)@\w+/', '$1', $rawText) : null;
+
+        // Commands always take priority over active state
+        if ($text === '/cancel') {
+            BotState::clear($chatId);
+            $this->telegram->sendMessage($chatId, 'Dibatalkan.');
+            return;
+        }
+
+        if ($text === '/start' || $text === '/help') {
+            $this->telegram->sendMessage($chatId,
+                "👋 <b>Bot Reminder</b> — Panduan Penggunaan\n\n" .
+                "Kirim pesan, foto, atau file ke saya → saya tanya kapan → isi format waktu → selesai!\n\n" .
+                "📋 <b>Commands:</b>\n" .
+                "/help — tampilkan panduan ini\n" .
+                "/list — lihat reminder upcoming (maks 10)\n" .
+                "/stop {id} — hentikan reminder, contoh: /stop 5\n" .
+                "/cancel — batalkan input yang sedang berjalan\n\n" .
+                "⏰ <b>Format waktu:</b>\n" .
+                "besok, 2PM\n" .
+                "hari ini, 3:30PM\n" .
+                "3 hari lagi, 09:00\n" .
+                "setiap Senin, 9AM\n" .
+                "setiap tanggal 1, 08:00",
+                'HTML'
+            );
+            return;
+        }
+
         $state = BotState::getOrCreate($chatId);
 
         // State: awaiting interval input
@@ -121,28 +149,6 @@ class TelegramController extends Controller
         }
 
         // No active state — handle commands and new messages
-        if ($text === '/start' || $text === '/help') {
-            $this->telegram->sendMessage($chatId,
-                "👋 <b>Bot Reminder</b> — Panduan Penggunaan\n\n" .
-                "Kirim pesan, foto, atau file ke saya → saya tanya kapan → isi format waktu → selesai!\n\n" .
-                "📋 <b>Commands:</b>\n" .
-                "/help — tampilkan panduan ini\n" .
-                "/list — lihat reminder upcoming (maks 10)\n" .
-                "/stop {id} — hentikan reminder, contoh: /stop 5\n" .
-                "/cancel — batalkan input yang sedang berjalan\n\n" .
-                "⏰ <b>Format waktu:</b>\n" .
-                "<code>hari ini, 3PM</code>\n" .
-                "<code>besok, 09:30</code>\n" .
-                "<code>3 hari lagi, 12PM</code>\n" .
-                "<code>2 minggu lagi, 10AM</code>\n" .
-                "<code>1 bulan lagi, 08:00</code>\n" .
-                "<code>25 Juli, 7PM</code>\n" .
-                "<code>setiap Senin, 9AM</code> — recurring 🔁\n" .
-                "<code>setiap tanggal 1, 08:00</code> — recurring 🔁"
-            );
-            return;
-        }
-
         if ($text === '/list') {
             $reminders = Reminder::upcoming()->where('chat_id', $chatId)->orderBy('scheduled_at')->limit(10)->get();
 
