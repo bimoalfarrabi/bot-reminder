@@ -20,18 +20,24 @@ class TelegramController extends Controller
 
     public function webhook(Request $request): JsonResponse
     {
-        $update = $request->json()->all();
+        try {
+            $update = $request->json()->all();
+            file_put_contents(storage_path('logs/last_update.json'), json_encode($update, JSON_PRETTY_PRINT));
 
-        // DEBUG: log raw update
-        logger()->info('webhook_update', $update);
+            $message = $update['message'] ?? $update['edited_message'] ?? null;
 
-        $message = $update['message'] ?? $update['edited_message'] ?? null;
+            if ($message) {
+                $this->handleMessage($message);
+            }
 
-        if ($message) {
-            $this->handleMessage($message);
+            return response()->json(['ok' => true]);
+        } catch (\Throwable $e) {
+            file_put_contents(storage_path('logs/webhook_error.txt'), 
+                date('Y-m-d H:i:s') . "\n" . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n\n",
+                FILE_APPEND
+            );
+            return response()->json(['ok' => false], 500);
         }
-
-        return response()->json(['ok' => true]);
     }
 
     public function poll(): void
