@@ -20,7 +20,7 @@ class BotState extends Model
 
     public static function getOrCreate(int $chatId): self
     {
-        return self::firstOrCreate(['chat_id' => $chatId]);
+        return self::firstOrCreate(['chat_id' => $chatId], ['state' => '']);
     }
 
     public static function clear(int $chatId): void
