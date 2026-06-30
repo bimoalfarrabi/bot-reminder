@@ -202,6 +202,23 @@ class ReminderParser
             return ['hour' => $hour, 'minute' => $minute];
         }
 
+        // Indonesian: "jam 4 sore", "jam 10 pagi", "jam 12 siang", "jam 8 malam"
+        if (preg_match('/^jam\s+(\d{1,2})(?::(\d{2}))?\s*(pagi|siang|sore|malam)?$/i', $timeStr, $m)) {
+            $hour = (int)$m[1];
+            $minute = isset($m[2]) && $m[2] !== '' ? (int)$m[2] : 0;
+            $period = strtolower($m[3] ?? '');
+
+            if ($period === 'sore' || $period === 'malam') {
+                if ($hour !== 12) $hour += 12;
+            } elseif ($period === 'siang') {
+                $hour = 12;
+            } elseif ($period === 'pagi' && $hour === 12) {
+                $hour = 0;
+            }
+
+            return ['hour' => $hour, 'minute' => $minute];
+        }
+
         return null;
     }
 }
