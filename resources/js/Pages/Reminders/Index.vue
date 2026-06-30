@@ -2,13 +2,25 @@
 import { Head, Link, router } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 
-defineProps({
+const props = defineProps({
     reminders: Object, // paginated
+    sort: String,
+    dir: String,
 })
 
 function stop(id) {
     if (!confirm(`Hentikan reminder #${id}?`)) return
     router.delete(route('reminders.destroy', id), { preserveScroll: true })
+}
+
+function sortBy(col) {
+    const newDir = props.sort === col && props.dir === 'desc' ? 'asc' : 'desc'
+    router.get(route('reminders.index'), { sort: col, dir: newDir }, { preserveState: true, preserveScroll: true })
+}
+
+function sortIcon(col) {
+    if (props.sort !== col) return '↕'
+    return props.dir === 'asc' ? '↑' : '↓'
 }
 
 function formatDate(dt) {
@@ -41,9 +53,9 @@ function getStatus(r) {
                     <table class="min-w-full text-xs font-mono">
                         <thead>
                             <tr class="border-b border-[#30363d] bg-[#21262d]">
-                                <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider">id</th>
+                                <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider cursor-pointer select-none hover:text-[#e6edf3] transition-colors" @click="sortBy('id')">id {{ sortIcon('id') }}</th>
                                 <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider">content</th>
-                                <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider">scheduled_at</th>
+                                <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider cursor-pointer select-none hover:text-[#e6edf3] transition-colors" @click="sortBy('scheduled_at')">scheduled_at {{ sortIcon('scheduled_at') }}</th>
                                 <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider">type</th>
                                 <th class="px-4 py-3 text-left font-medium text-[#8b949e] uppercase tracking-wider">status</th>
                                 <th class="px-4 py-3"></th>
